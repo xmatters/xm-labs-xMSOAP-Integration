@@ -1,100 +1,174 @@
-# Instructions on creating the repo
-This file is divided up into two parts, the first is instructions on creating the repo and cloning the template, the second part is the template for the `README.md` file that will serve as the home page and installation instructions for the integration. 
+# xM SOAP HTTP POST Integration
+The xMatters Integration Builder is capable of receiving an parsing a variety of HTTP POST content.  In this case, this integration is designed to specifically consume an xMSOAP object via the xMatters Integration Builder.  Historically this would be one possible integration mechanism between an "External Product" and the "xMatters Integration Agent".
 
-Some examples to emulate:
-* [Logz.io](https://github.com/xmatters/xm-labs-logz.io-elk)
-* [StatusPage](https://github.com/xmatters/xm-labs-statuspage)
+As this is an HTTP POST, it is entirely possible to remove the Integration Agent from the picture assuming the "External Product" (Any product integrating to xMatters via the HHTP API of the Integration Agent using the xMSOAP format) can post to the xMatters onDemand instance instead.
 
-## 1. Create the repo
-[Create the repo](https://help.github.com/articles/create-a-repo/) using your own GitHub account. Please prefix the name of the repo with `xm-labs-` and all in lower case. When you create the repo don't add a README or LICENSE; this will make sure to initialize an empty repo. 
+This is an example integration provided to show the nuances within the Integration Builder coding which are needed to consume an xMSOAP based HTTP Post and convert it into something usable by xMatters on Demand.
 
-## 2. Clone the template
-*Note*: These instructions use git in the terminal. The GitHub desktop client is rather limited and likely won't save you any headaches. 
+**Please note:** This could also be used for any SOAP based HTTP Post with some modification to manage an alternate SOAP Envelope.
 
-Open a command line and do the following. Where `MY_NEW_REPO_NAME_HERE` is the name of your GitHub repo and `MY_NEW_REPO_URL` is the url generated when you create the new repo. 
-
-```bash
-# Clone the template repo to the local file system. 
-git clone https://github.com/xmatters/xm-labs-template.git
-# Change the directory name to avoid confusion, then cd into it
-mv xm-labs-template MY_NEW_REPO_NAME_HERE
-cd MY_NEW_REPO_NAME_HERE
-# Remove the template git history
-rm -Rf .git/
-# Initialize the new git repo
-git init
-# Point this repo to the one on GitHub
-git remote add origin https://github.com/MY_NEW_REPO_URL.git
-# Add all files in the current directory and commit to staging
-git add .
-git commit -m "initial commit"
-# Push to cloud!
-git push origin master
-```
-
-## 3. Make updates
-Then, make the updates to the `README.md` file and add any other files necessary. `README.md` files are written in GitHub-flavored markdown, see [here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) for a quick reference. 
-
-
-## 4. Push to GitHub
-Periodically, you will want to do a `git commit` to stash the changes locally. Then, when you are ready or need to step away, do a `git push origin master` to push the local changes to github.com. 
-
-## 5. Request to add to xM Labs
-Once you are all finished, let Travis know and he will then fork it to the xMatters account and update the necessary links in the xM Labs main page. From there if you update your repo, those changes can be merged into the xMatters account repo and everything will be kept up to date!
-
-# Template below:
----
-
-# Product Name Goes Here
-A note about what the product is and what this integration/scriptlet is all about. Check out the sweet video [here](media/mysweetvideo.mov). Be sure to indicate what type of integration or enhancement you're building! (One-way or closed-loop integration? Script library? Feature update? Enhancement to an existing integration?)
+**xMatters Communication Plan Inbound Integrations**
+* **0 - SOAP HTTP Post Entrypoint**: This inbound integration receives the HTTP Post containing the xMSOAP envelope.  It will parse the envelope and convert the SOAP properties into Communication Form properties and then pass the result to the Sample Form EntryPoint 
+* **Sample Form EntryPoint**: This inbound integrations receives the HTTP Post from the SOAP HTTP Post Entrypoint in the required JSON format for the underlying form.
 
 <kbd>
   <img src="https://github.com/xmatters/xMatters-Labs/raw/master/media/disclaimer.png">
 </kbd>
 
 # Pre-Requisites
-* Version 453 of App XYZ
-* Account in Application ABC
 * xMatters account - If you don't have one, [get one](https://www.xmatters.com)!
 
 # Files
-* [ExampleCommPlan.zip](ExampleCommPlan.zip) - This is an example comm plan to help get started. (If it doesn't make sense to have a full communication plan, then you can just use a couple javascript files like the one below.)
-* [EmailMessageTemplate.html](EmailMessageTemplate.html) - This is an example HTML template for emails and push messages. 
-* [FileA.js](FileA.js) - An example javascript file to be pasted into a Shared Library in the Integration builder. Note the comments
+* [SamplexMSOAPConversion.zip](SamplexMSOAPConversion.zip) - The example Communication Plan including both the Sample Code and Sample Form. 
 
 # How it works
-Add some info here detailing the overall architecture and how the integration works. The more information you can add, the more helpful this sections becomes. For example: An action happens in Application XYZ which triggers the thingamajig to fire a REST API call to the xMatters inbound integration on the imported communication plan. The integration script then parses out the payload and builds an event and passes that to xMatters. 
+This integration provides an example of consuming an xMSOAP HTTP Post and converting it into a xMatters Communciation Form JSON Object.  This includes providing examples addressing several of the xMSOAP nuances around data (eventToken) management. 
+
+Assuming the "External Product" is capable of targetting xMatters onDemand directly, adjusting the endpoint used by the "External Product" from the Integration Agent to the 0 - SOAP HTTP Post EntryPoint and extract the xMatters Integration Agent from the process.
+
+Although this example is specific to xMSOAP, it can definately be used as a basic example for any other SOAP Envelope based HTTP Post from an "Enternal Product". 
+
+This integration is set up to pass the following values from the "Enternal Product" to xMatters: 
+* person_id - a comma delimited list of one or more recipients
+* sample message - a long message including carriage returns
+* sample priority - a single list item selection
+* sample boolean - a yes/no
+* sample country - a multilist of countries impacted which also requires a delimiter field
+
+**NOTE**: The Integration Agent may have custom code that will also need to be considered/ported into the Integration Builder Code but that would be specific to the Integration and workflow.
+
 
 # Installation
-Details of the installation go here. 
 
 ## xMatters set up
-1. Steps to create a new Shared Library or (in|out)bound integration or point them to the xMatters online help to cover specific steps; i.e., import a communication plan (link: http://help.xmatters.com/OnDemand/xmodwelcome/communicationplanbuilder/exportcommplan.htm)
-2. Add this code to some place on what page:
-   ```
-   var items = [];
-   items.push( { "stuff": "value"} );
-   console.log( 'Do stuff' );
-   ```
+
+### Create an integration user
+This integration requires a user who can authenticate REST web service calls when injecting events.
+
+This user needs to be able to work with events, but does not need to update administrative settings. While you can use the default Company Supervisor role to authenticate REST web service calls, the best method is to create a user specifically for this integration with the "REST Web Service User" role that includes the permissions and capabilities.
+
+__Note__: If you are installing this integration into an xMatters trial instance, you don't need to create a new user. Instead, locate the "Integration User" sample user that was automatically configured with the REST Web Service User role when your instance was created and assign them a new password. You can then skip ahead to the next section.
+
+__To create an integration user:__
+
+1. Log in to the target xMatters system.
+2. On the __Users__ tab, click the __Add New User__ icon.
+3. Enter the appropriate information for your new user. 
+    Example User Name __integration__
+4. Assign the user to the __REST Web Service User__ role.
+5. Click __Save__.
+6. On the next page, set the web login ID and password. 
+
+Make a note of these details; you will need them when configuring other parts of this integration.
+
+This users details will be user for URL based authentication
+
+<br><br><br>
+### Create users and groups that will receive notifications
+
+The integration will notify the recipients listed in the person_id property, these recipients will need to be present in xMatters.
+
+*This integration does not synchronize users and groups. Make sure you have created your users and groups in xMatters before using this integration.*
+
+For more information about creating users and devices in xMatters, refer to the [xMatters On-Demand help](https://help.xmatters.com/ondemand/xmatters.htm).
+
+<br><br><br>
+### Import the xMatters Communication Plan
+
+The next step is to import the communication plan.
+
+To import the communication plan:
+
+1. In the target xMatters system, on the __Developer__ tab, click __Import Plan__.
+2. Click __Browse__, and then locate the downloaded communication plan: [SamplexMSOAPConversion.zip](SampleXMSOAPConversion.zip)
+3. Click __Import Plan__.
+4. Once the communication plan has been imported, click __Plan Disabled__ to enable the plan.
+5. In the __Edit__ drop-down list, select __Access Permissions__ a
+6. Enter the REST API user you created above, and then click __Save Changes__.
+7. In the __Edit__ drop-down list, select __Forms__.
+8. For the __New Incident__ form, in the __Not Deployed__ drop-down list, click Create __Event Web Service__.
+9. After you create the web service, the drop-down list label will change to __Web Service Only__.
+10. In the __Web Service Only__ drop-down list, click __Permissions__.
+11. Enter the REST API user you created above, and then click __Save Changes__.
 
 
-## Application ABC set up
-Any specific steps for setting up the target application? The more precise you can be, the better!
+<br><br><br>
+### Accessing web service URLs
 
-Images are encouraged. Adding them is as easy as:
-```
-<kbd>
-  <img src="media/cat-tax.png" width="200" height="400">
-</kbd>
-```
+Each integration service has its own URL, one is used to target the Integration from the "External Product" the other is used to target the Sample Form from the initial integration Service (This is configured via an Integration Builder Constant).
 
-<kbd>
-  <img src="media/cat-tax.png" width="200" height="400">
-</kbd>
+__To get a web service URL for an integration service:__
 
+1. On the Integration Builder tab, expand the list of inbound integrations.
+2. Click on the inbound integration.
+3. Under __How to trigger the integration__ search for the REST API user you created above and copy/record the trigger associated to that user account.
+
+__NOTE:__ You will need the URL for each integration service.
+
+### Configuring access to the Form
+
+For the inbound integration __0 - SOAP HTTP Post Entrypoint__ to successfully hit the Sample Form, the Samnple Form EntryPoint URL must be configured in code.  We have made this simple by providing it as a constant.
+
+1. On the Integration Builder tab, click on the __Edit Constants__ button.
+2. Edit the __FORM_URL__ constant and update the value to match the trigger for the Sample Form EntryPoint from the prior step __NOTE__: This is only from the __api/...__ portion of the URL and does not include the port and base domain reference found in the trigger.
+
+### Initiating the integration
+
+The trigger obtained from __0 - SOAP HTTP Post Entrypoint__ is sufficient to initiate the integration, assuming the xMSOAP passed via the post matches what is outlined above.  An example of the xMSOAP Post body which works which this integration will also be provided below.
 
 # Testing
-Be specific. What should happen to make sure this code works? What would a user expect to see? 
+## Sample SOAP Object
+Below is a sample SOAP Object aligned to the underlying inbound integration and subsequent form.  This can be used for testing.  I use https://client.restlet.com as my testing tool.
 
-# Troubleshooting
-Optional section for how to troubleshoot. Especially anything in the source application that an xMatters developer might not know about, or specific areas in xMatters to look for details - like the Activity Stream? 
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+   <soapenv:Header />
+   <soapenv:Body>
+      <sch:AddEvent xmlns:sch="http://www.alarmpoint.com/webservices/schema">
+         <sch:user>test</sch:user>
+         <sch:password>abc123</sch:password>
+         <sch:clientTimestamp>23/08/2018 7:38:27 AM</sch:clientTimestamp>
+         <sch:clientIP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+         <sch:clientOSUser xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+         <sch:company>ACME</sch:company>
+         <sch:eventTokens>
+            <sch:eventToken>
+               <sch:name>agent_client_id</sch:name>
+               <sch:value>xMNonProd</sch:value>
+            </sch:eventToken>
+            <sch:eventToken>
+               <sch:name>sample message</sch:name>
+               <sch:value>This is a sample message
+
+INCIDENT START TIME: 25-Sep-2018 12:08 GMT
+ESTIMATED RESOLUTION TIME: No ETR
+NEXT UPDATE TIME: 25-Sep-2018 18:00 GMT
+
+TICKET:  INC000001
+
+REFERENCE:  http://google.com</sch:value>
+            </sch:eventToken>
+            <sch:eventToken>
+               <sch:name>sample priority</sch:name>
+               <sch:value>P1</sch:value>
+            </sch:eventToken>
+            <sch:eventToken>
+               <sch:name>sample boolean</sch:name>
+               <sch:value>No</sch:value>
+            </sch:eventToken>
+            <sch:eventToken>
+               <sch:name>sample country</sch:name>
+               <sch:value>Afghanistan|Albania|Algeria|Angola|Argentina|Armenia|Aruba|Australia</sch:value>
+            </sch:eventToken>
+            <sch:eventToken>
+               <sch:name>sample country-list-item-delimiter</sch:name>
+               <sch:value>|</sch:value>
+            </sch:eventToken>
+            <sch:eventToken>
+               <sch:name>person_id</sch:name>
+               <sch:value>Operations,bsmith</sch:value>
+            </sch:eventToken>
+         </sch:eventTokens>
+      </sch:AddEvent>
+   </soapenv:Body>
+</soapenv:Envelope>
