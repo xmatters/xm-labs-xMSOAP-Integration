@@ -120,7 +120,7 @@ The trigger obtained from __0 - SOAP HTTP Post Entrypoint__ is sufficient to ini
 ## Sample SOAP Object
 Below is a sample SOAP Object aligned to the underlying inbound integration and subsequent form.  This can be used for testing.  I use https://client.restlet.com as my testing tool.
 
-<?xml version="1.0" encoding="UTF-8"?>
+```<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
    <soapenv:Header />
    <soapenv:Body>
@@ -171,4 +171,4 @@ REFERENCE:  http://google.com</sch:value>
          </sch:eventTokens>
       </sch:AddEvent>
    </soapenv:Body>
-</soapenv:Envelope>
+</soapenv:Envelope>```
