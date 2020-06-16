@@ -12,7 +12,9 @@ This is an example integration provided to show the nuances within the Integrati
 * **Sample Form EntryPoint**: This inbound integrations receives the HTTP Post from the SOAP HTTP Post Entrypoint in the required JSON format for the underlying form.
 
 <kbd>
-  <img src="https://github.com/xmatters/xMatters-Labs/raw/master/media/disclaimer.png">
+<a href="https://support.xmatters.com/hc/en-us/community/topics">
+   <img src="https://github.com/xmatters/xMatters-Labs/raw/master/media/disclaimer.png">
+</a>
 </kbd>
 
 # Pre-Requisites
