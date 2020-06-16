@@ -7,7 +7,7 @@ This is an example integration provided to show the nuances within the Integrati
 
 **Please note:** This could also be used for any SOAP based HTTP Post with some modification to manage an alternate SOAP Envelope.
 
-**xMatters Communication Plan Inbound Integrations**
+**xMatters Workflow Inbound Integrations**
 * **0 - SOAP HTTP Post Entrypoint**: This inbound integration receives the HTTP Post containing the xMSOAP envelope.  It will parse the envelope and convert the SOAP properties into Communication Form properties and then pass the result to the Sample Form EntryPoint 
 * **Sample Form EntryPoint**: This inbound integrations receives the HTTP Post from the SOAP HTTP Post Entrypoint in the required JSON format for the underlying form.
 
@@ -19,7 +19,7 @@ This is an example integration provided to show the nuances within the Integrati
 * xMatters account - If you don't have one, [get one](https://www.xmatters.com)!
 
 # Files
-* [SamplexMSOAPConversion.zip](SamplexMSOAPConversion.zip) - The example Communication Plan including both the Sample Code and Sample Form. 
+* [SamplexMSOAPConversion.zip](SamplexMSOAPConversion.zip) - The example Workflow including both the Sample Code and Sample Form. 
 
 # How it works
 This integration provides an example of consuming an xMSOAP HTTP Post and converting it into a xMatters Communciation Form JSON Object.  This includes providing examples addressing several of the xMSOAP nuances around data (eventToken) management. 
@@ -73,16 +73,16 @@ The integration will notify the recipients listed in the person_id property, the
 For more information about creating users and devices in xMatters, refer to the [xMatters On-Demand help](https://help.xmatters.com/ondemand/xmatters.htm).
 
 <br><br><br>
-### Import the xMatters Communication Plan
+### Import the xMatters Workflow
 
-The next step is to import the communication plan.
+The next step is to import the Workflow.
 
-To import the communication plan:
+To import the Workflow:
 
-1. In the target xMatters system, on the __Developer__ tab, click __Import Plan__.
-2. Click __Browse__, and then locate the downloaded communication plan: [SamplexMSOAPConversion.zip](SampleXMSOAPConversion.zip)
-3. Click __Import Plan__.
-4. Once the communication plan has been imported, click __Plan Disabled__ to enable the plan.
+1. In the target xMatters system, on the __Workflow_ page, click __Import__.
+2. Click __Browse__, and then locate the downloaded Workflow: [SamplexMSOAPConversion.zip](SampleXMSOAPConversion.zip)
+3. Click __Import__.
+4. Once the Workflow has been imported, click __Disabled__ to enable the workflow.
 5. In the __Edit__ drop-down list, select __Access Permissions__ a
 6. Enter the REST API user you created above, and then click __Save Changes__.
 7. In the __Edit__ drop-down list, select __Forms__.
